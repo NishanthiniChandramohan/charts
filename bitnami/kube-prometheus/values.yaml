@@ -723,14 +723,22 @@ prometheus:
 
   ## PrometheusRule defines recording and alerting rules for a Prometheus instance.
   ##
-  additionalPrometheusRules: []
+  additionalPrometheusRules:
+    - name: helm-rollback-alert
+      groups:
+        - alert: HelmReleaseRolledBack
+          expr: flux_helm_operator_release_condition_info{condition="RolledBack"} == 1
+          labels:
+           severity: critical
+          annotations:
+           summary: Helm rollback for (instance {{ $labels.instance }})
   # - name: custom-recording-rules
   #   groups:
   #     - name: sum_node_by_job
   #       rules:
   #         - record: job:kube_node_labels:sum
   #           expr: sum(kube_node_labels) by (job)
-  #     - name: sum_prometheus_config_reload_by_pod
+  #     - name: sum_prometheus_config_reload_by_pod.  
   #       rules:
   #         - record: job:prometheus_config_last_reload_successful:sum
   #           expr: sum(prometheus_config_last_reload_successful) by (pod)
