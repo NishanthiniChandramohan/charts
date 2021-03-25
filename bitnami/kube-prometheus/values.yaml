@@ -726,12 +726,14 @@ prometheus:
   additionalPrometheusRules:
     - name: helm-rollback-alert
       groups:
-        - alert: HelmReleaseRolledBack
-          expr: flux_helm_operator_release_condition_info{condition="RolledBack"} == 1
-          labels:
-           severity: critical
-          annotations:
-           summary: Helm rollback for (instance {{ $labels.instance }})
+        - name: helm-rollback-alert
+          rules:
+            - alert: HelmReleaseRolledBack
+              expr: flux_helm_operator_release_condition_info{condition="RolledBack"} == 1
+              labels:
+                severity: critical
+              annotations:
+                summary: Helm rollback for (instance {{ $labels.instance }})
   # - name: custom-recording-rules
   #   groups:
   #     - name: sum_node_by_job
